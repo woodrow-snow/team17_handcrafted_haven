@@ -1,0 +1,10 @@
+.footer {
+    /* box model */
+    padding: 1rem;
+
+    /* colors */
+    background-color: var(--accent-1);
+
+    /* font & text */
+    text-align: center;
+}
