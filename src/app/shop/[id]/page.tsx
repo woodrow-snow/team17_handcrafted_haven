@@ -55,6 +55,81 @@ const products = [
     },
 ];
 
+const tempReviews = [
+    {
+        product_id: 1,
+        name: "Woody Mason",
+        rating: 5,
+        comment: "This product is amazing! I can't imagine my life without it now!"
+    },
+    {
+        product_id: 1,
+        name: "Chad",
+        rating: 4,
+        comment: "Pretty good product!"
+    },
+    {
+        product_id: 2,
+        name: "Jeremy",
+        rating: 3,
+        comment: "It was good but it could be better."
+    },
+    {
+        product_id: 2,
+        name: "Desmond",
+        rating: 5,
+        comment: "This is the best thing I own!"
+    },
+    {
+        product_id: 3,
+        name: "Roseman",
+        rating: 2,
+        comment: "It came broken in the mail!"
+    },
+    {
+        product_id: 3,
+        name: "Jerry",
+        rating: 5,
+        comment: "I bought this as a gift for my wife and she loved it"
+    },
+    {
+        product_id: 4,
+        name: "Jasmine",
+        rating: 5,
+        comment: "If I could give this product a 6 I would!"
+    },
+    {
+        product_id: 4,
+        name: "Daisy",
+        rating: 4,
+        comment: "Soild product! TYSM!!"
+    },
+    {
+        product_id: 5,
+        name: "Maria",
+        rating: 5,
+        comment: "I don't know how I got along before this came into my life!"
+    },
+    {
+        product_id: 5,
+        name: "David",
+        rating: 1,
+        comment: "This was probably the worst product I have ever received"
+    },
+    {
+        product_id: 6,
+        name: "Aurora",
+        rating: 5,
+        comment: "I got this for my home and I love it!"
+    },
+    {
+        product_id: 6,
+        name: "Matthew",
+        rating: 3,
+        comment: "Good product, but there are things that could be better."
+    }
+];
+
 export default function ProductDetailPage() {
     const { id } = useParams() as { id: string }; 
     const router = useRouter();
@@ -114,6 +189,21 @@ export default function ProductDetailPage() {
                         Add to Cart
                     </button>
                 </div>
+            </div>
+            <h2 className={styles.reviewsHeader}>Reviews</h2>
+            {/* adding review cards */}
+            <div className={styles.reviews}>
+                {tempReviews.map((review) => {
+                    if (review.product_id !== product.id) return null;
+
+                    return (
+                        <section className={styles.review}>
+                            <span>{review.name}</span>
+                            <span className={styles.rating}>{review.rating} / 5</span>
+                            <span className={styles.comment}>"{review.comment}"</span>
+                        </section>
+                    );
+                })}
             </div>
         </main>
     );

@@ -76,6 +76,57 @@
   letter-spacing: 0.4px;
 }
 
+/* for reviews */
+.reviewsHeader {
+  /* text and font */
+  text-align: center;
+  font-family: var(--head);
+  font-size: 3.5rem;
+  
+  /* box model */
+  margin: 1rem 0;
+  border-radius: 50px;
+
+  /* color */
+  background-color: var(--accent-1);
+  color: var(--accent-2);
+}
+
+.reviews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0 1rem;
+}
+
+.review {
+  /* grid */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  /* colors */
+  background-color: var(--accent-3);
+  color: white;
+
+  /* box model */
+  max-width: fit-content;
+  border-radius: 50px;
+  padding: 1rem;
+
+  &:hover {
+    background-color: var(--accent-2);
+  }
+}
+
+.rating {
+  justify-self: center;
+  align-self: center;
+}
+
+.comment {
+  grid-column: 1/3;
+}
+
 @media (min-width: 768px) {
   .layout {
     flex-direction: row;
