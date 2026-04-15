@@ -1,193 +1,71 @@
-"use client";
-
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { fetchProductDetails } from "@/lib/data";
 import styles from "./page.module.css";
-
-const products = [
-    {
-        id: 1,
-        name: "Walnut Accent Chair",
-        price: "$189",
-        description:
-            "A clean handcrafted chair with a warm walnut finish for modern living spaces.",
-        image: "/images/hero-image.jpg",
-    },
-    {
-        id: 2,
-        name: "Rustic Coffee Table",
-        price: "$245",
-        description:
-            "Solid wood center table built to bring warmth and character into the room.",
-        image: "/images/hero-image.jpg",
-    },
-    {
-        id: 3,
-        name: "Floating Wall Shelf",
-        price: "$72",
-        description:
-            "Minimal shelf piece designed for décor, books, and small everyday items.",
-        image: "/images/hero-image.jpg",
-    },
-    {
-        id: 4,
-        name: "Dining Bench",
-        price: "$158",
-        description:
-            "Hand-finished bench seating with a sturdy frame and timeless farmhouse feel.",
-        image: "/images/hero-image.jpg",
-    },
-    {
-        id: 5,
-        name: "Bedside Table",
-        price: "$129",
-        description:
-            "Compact bedside storage piece crafted for both style and daily function.",
-        image: "/images/hero-image.jpg",
-    },
-    {
-        id: 6,
-        name: "Entryway Console",
-        price: "$210",
-        description:
-            "Slim handcrafted console table ideal for hallways, foyers, and display décor.",
-        image: "/images/hero-image.jpg",
-    },
-];
-
-const tempReviews = [
-    {
-        product_id: 1,
-        name: "Woody Mason",
-        rating: 5,
-        comment: "This product is amazing! I can't imagine my life without it now!"
-    },
-    {
-        product_id: 1,
-        name: "Chad",
-        rating: 4,
-        comment: "Pretty good product!"
-    },
-    {
-        product_id: 2,
-        name: "Jeremy",
-        rating: 3,
-        comment: "It was good but it could be better."
-    },
-    {
-        product_id: 2,
-        name: "Desmond",
-        rating: 5,
-        comment: "This is the best thing I own!"
-    },
-    {
-        product_id: 3,
-        name: "Roseman",
-        rating: 2,
-        comment: "It came broken in the mail!"
-    },
-    {
-        product_id: 3,
-        name: "Jerry",
-        rating: 5,
-        comment: "I bought this as a gift for my wife and she loved it"
-    },
-    {
-        product_id: 4,
-        name: "Jasmine",
-        rating: 5,
-        comment: "If I could give this product a 6 I would!"
-    },
-    {
-        product_id: 4,
-        name: "Daisy",
-        rating: 4,
-        comment: "Soild product! TYSM!!"
-    },
-    {
-        product_id: 5,
-        name: "Maria",
-        rating: 5,
-        comment: "I don't know how I got along before this came into my life!"
-    },
-    {
-        product_id: 5,
-        name: "David",
-        rating: 1,
-        comment: "This was probably the worst product I have ever received"
-    },
-    {
-        product_id: 6,
-        name: "Aurora",
-        rating: 5,
-        comment: "I got this for my home and I love it!"
-    },
-    {
-        product_id: 6,
-        name: "Matthew",
-        rating: 3,
-        comment: "Good product, but there are things that could be better."
-    }
-];
+import { Product } from "@/lib/definitions";
+import AddToCartButton from "../../layout_components/AddToCartButton";
 
 export default function ProductDetailPage() {
     const { id } = useParams() as { id: string }; 
     const router = useRouter();
 
     const product = products.find((p) => p.id === Number(id));
+export default async function ProductDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+    const { id } = await params;
+    const { product, reviews } = await fetchProductDetails(id);
 
     if (!product) {
         return (
             <main className={styles.page}>
-                <p>Product not found.</p>
+                <p className={styles.error}>Product not found.</p>
             </main>
         );
     }
 
-    function addToCart() {
-        if (!product) return;
-        
-        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
-        cart.push({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.image,
-            quantity: 1,
-        });
-
-        localStorage.setItem("cart", JSON.stringify(cart));
-
-        window.dispatchEvent(new Event("storage"));
-
-        alert(`${product.name} added to cart!`);
-    }
-
     return (
         <main className={styles.page}>
-            <button className={styles.backButton} onClick={() => router.back()}>
-                ← Back to Shop
-            </button>
-
             <div className={styles.layout}>
+                {/* Product Image */}
                 <div className={styles.imageWrap}>
-                    <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className={styles.image}
+                    <Image 
+                        src={product.image_url} 
+                        alt={product.name} 
+                        fill 
+                        priority
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className={styles.image} 
                     />
                 </div>
 
+                {/* Product Info */}
                 <div className={styles.info}>
+                    <div className={styles.artisanHeader}>
+                        <div className={styles.avatarWrap}>
+                            <Image 
+                                src={product.seller_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(product.shop_name)}&background=random`} 
+                                alt={product.shop_name}
+                                fill
+                                sizes="40px"
+                                className={styles.avatar}
+                            />
+                        </div>
+                        <p className={styles.artisanName}>Crafted by {product.shop_name}</p>
+                    </div>
+
                     <h1 className={styles.name}>{product.name}</h1>
-                    <p className={styles.price}>{product.price}</p>
+                    <p className={styles.price}>${Number(product.price).toFixed(2)}</p>
                     <p className={styles.description}>{product.description}</p>
 
-                    <button className={styles.addButton} onClick={addToCart}>
-                        Add to Cart
-                    </button>
+                    <AddToCartButton product={product as Product} />
+
+                    {/* Artisan Mini-Bio */}
+                    <div className={styles.sellerSection}>
+                        <h3>About the Artisan</h3>
+                        <p>{product.seller_bio}</p>
+                    </div>
                 </div>
             </div>
             <h2 className={styles.reviewsHeader}>Reviews</h2>
@@ -205,6 +83,24 @@ export default function ProductDetailPage() {
                     );
                 })}
             </div>
+
+            {/* Reviews Section - need to update for reviews from DB*/}
+            <section className={styles.reviewsSection}>
+                <h2>Customer Reviews</h2>
+                {reviews.length > 0 ? (
+                    <div className={styles.reviewsList}>
+                        {reviews.map((review: any) => (
+                            <div key={review.id} className={styles.reviewCard}>
+                                <p className={styles.reviewUser}><strong>{review.user_name}</strong></p>
+                                <p className={styles.rating}>{"⭐".repeat(review.rating)}</p>
+                                <p className={styles.comment}>{review.comment}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p>No reviews yet for this piece.</p>
+                )}
+            </section>
         </main>
     );
 }

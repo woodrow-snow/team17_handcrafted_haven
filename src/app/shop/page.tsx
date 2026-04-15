@@ -1,104 +1,58 @@
-import Image from "next/image";
-import Link from "next/link";
+import { Suspense } from 'react';
 import styles from "./page.module.css";
+import Search from "@/app/ui/search";
+import { ShopGridSkeleton } from "@/app/ui/skeletons";
+import ProductGrid from "@/app/ui/shop/product-grid"; 
+import Link from "next/link";
+import { fetchAllProducts } from "@/lib/data";
 
-const products = [
-  {
-    id: 1,
-    name: "Walnut Accent Chair",
-    price: "$189",
-    description:
-      "A clean handcrafted chair with a warm walnut finish for modern living spaces.",
-    image: "/images/hero-image.jpg",
-  },
-  {
-    id: 2,
-    name: "Rustic Coffee Table",
-    price: "$245",
-    description:
-      "Solid wood center table built to bring warmth and character into the room.",
-    image: "/images/hero-image.jpg",
-  },
-  {
-    id: 3,
-    name: "Floating Wall Shelf",
-    price: "$72",
-    description:
-      "Minimal shelf piece designed for décor, books, and small everyday items.",
-    image: "/images/hero-image.jpg",
-  },
-  {
-    id: 4,
-    name: "Dining Bench",
-    price: "$158",
-    description:
-      "Hand-finished bench seating with a sturdy frame and timeless farmhouse feel.",
-    image: "/images/hero-image.jpg",
-  },
-  {
-    id: 5,
-    name: "Bedside Table",
-    price: "$129",
-    description:
-      "Compact bedside storage piece crafted for both style and daily function.",
-    image: "/images/hero-image.jpg",
-  },
-  {
-    id: 6,
-    name: "Entryway Console",
-    price: "$210",
-    description:
-      "Slim handcrafted console table ideal for hallways, foyers, and display décor.",
-    image: "/images/hero-image.jpg",
-  },
-];
+export default async function ShopPage(props: {
+  searchParams?: Promise<{
+    query?: string;
+    category?: string;
+  }>;
+}) {
+  const searchParams = await props.searchParams;
+  const query = searchParams?.query || '';
+  const category = searchParams?.category || '';
 
-export default function ShopPage() {
+  const allProducts = await fetchAllProducts();
+  const categories = Array.from(
+    new Set(allProducts.map((p: any) => p.category).filter(Boolean))
+  ) as string[];
+
   return (
     <main className={styles.page}>
       <section className={styles.hero}>
-        <p className={styles.eyebrow}>Handcrafted Collection</p>
         <h1 className={styles.heading}>Shop Our Featured Pieces</h1>
-        <p className={styles.subheading}>
-          Explore a curated set of handcrafted furniture and décor pieces built
-          for warmth, function, and timeless style.
-        </p>
+        <div className={styles.controls}>
+          <Search placeholder="Search handcrafted treasures..." />
+          
+          <div className={styles.filterBar}>
+            {/* <Link 
+              href="/shop" 
+              className={!category ? styles.activeFilter : styles.filterBtn}
+            >
+              All
+            </Link> */}
+
+            {categories.map((cat) => (
+              <Link
+                key={cat}
+                href={`/shop?category=${cat}${query ? `&query=${query}` : ''}`}
+                className={category === cat ? styles.activeFilter : styles.filterBtn}
+              >
+                {cat}
+              </Link>
+            ))}
+          </div>
+        </div>
       </section>
 
       <section className={styles.section}>
-        <div className={styles.grid}>
-          {products.map((product) => {
-            if (!product) return null; // TypeScript safety
-
-            return (
-              <article key={product.id} className={styles.card}>
-                <div className={styles.imageWrap}>
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    loading={product.id === 1 ? "eager" : "lazy"}
-                    className={styles.image}
-                  />
-                </div>
-
-                <div className={styles.cardBody}>
-                  <div className={styles.titleRow}>
-                    <h2 className={styles.productName}>{product.name}</h2>
-                    <span className={styles.price}>{product.price}</span>
-                  </div>
-
-                  <p className={styles.description}>{product.description}</p>
-
-                  <Link href={`/shop/${product.id}`} className={styles.cardButton}>
-                    View Details
-                  </Link>
-                </div>
-              </article>
-            );
-          })}
-        </div>
+        <Suspense key={query + category} fallback={<ShopGridSkeleton />}>
+          <ProductGrid query={query} category={category} />
+        </Suspense>
       </section>
     </main>
   );

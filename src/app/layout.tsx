@@ -5,7 +5,6 @@ import { Poppins, Updock } from 'next/font/google';
 import Footer from "./layout_components/footer/footer";
 import CartBadgeUpdater from "./layout_components/cart-badge-updater";
 
-
 const headingFont = Updock({
   weight: ['400'],
   subsets: ['latin'],
@@ -18,7 +17,6 @@ const bodyFont = Poppins({
   variable: '--body',
 });
 
-// need to update meta data
 export const metadata: Metadata = {
   title: {
     default: "Handcrafted Haven",
