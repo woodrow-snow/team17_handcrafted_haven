@@ -3,8 +3,19 @@ import Credentials from 'next-auth/providers/credentials';
 import { authConfig } from './auth.config';
 import { z } from 'zod';
 import type { User } from '@/lib/definitions';
-import bcrypt from 'bcryptjs'; // safer for Vercel deployments
+import bcrypt from 'bcryptjs'; 
 import postgres from 'postgres';
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      role: string;
+    } & import("next-auth").DefaultSession["user"];
+  }
+  interface User {
+    role?: string;
+  }
+}
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 

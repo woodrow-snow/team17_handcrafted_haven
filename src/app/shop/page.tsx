@@ -29,17 +29,17 @@ export default async function ShopPage(props: {
           <Search placeholder="Search handcrafted treasures..." />
           
           <div className={styles.filterBar}>
-            {/* <Link 
-              href="/shop" 
+            <Link 
+              href={`/shop${query ? `?query=${query}` : ''}`} 
               className={!category ? styles.activeFilter : styles.filterBtn}
             >
               All
-            </Link> */}
+            </Link>
 
             {categories.map((cat) => (
               <Link
                 key={cat}
-                href={`/shop?category=${cat}${query ? `&query=${query}` : ''}`}
+                href={`/shop?category=${encodeURIComponent(cat)}${query ? `&query=${encodeURIComponent(query)}` : ''}`}
                 className={category === cat ? styles.activeFilter : styles.filterBtn}
               >
                 {cat}

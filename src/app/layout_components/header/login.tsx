@@ -3,6 +3,6 @@ import styles from "./header.module.css"
 
 export default function LoginButton() {
     return (
-        <Link href='/account' className={styles.login}>Login</Link>
+        <Link href='/login' className={styles.login}>Login</Link>
     );
 }
