@@ -51,7 +51,7 @@ export default async function ProductGrid({
             <div className={styles.artisanInfo}>
               <div className={styles.avatarWrap}>
                 <Image
-                  src={product.seller_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(product.seller_name || 'A')}&background=random`}
+                  src={product.seller_avatar || "https://placehold.co/200x200"}
                   alt={product.seller_name || 'Artisan'}
                   width={32}
                   height={32}

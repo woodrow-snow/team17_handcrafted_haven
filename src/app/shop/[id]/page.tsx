@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { fetchProductDetails } from "@/lib/data";
 import styles from "./page.module.css";
 import { Product } from "@/lib/definitions";
@@ -10,19 +11,19 @@ export default async function ProductDetailPage({
 }: { 
   params: Promise<{ id: string }> 
 }) {
-    const { id } = await params;
-    const { product, reviews } = await fetchProductDetails(id);
+  const { id } = await params;
+  const { product, reviews } = await fetchProductDetails(id);
 
-    if (!product) {
-        return (
-            <main className={styles.page}>
-                <p className={styles.error}>Product not found.</p>
-            </main>
-        );
-    }
-
+  if (!product) {
     return (
         <main className={styles.page}>
+            <p className={styles.error}>Product not found.</p>
+        </main>
+    );
+  }
+
+  return (
+    <main className={styles.page}>
             <div className={styles.layout}>
                 {/* Product Image */}
                 <div className={styles.imageWrap}>
@@ -113,5 +114,5 @@ export default async function ProductDetailPage({
                 </form>
             </section>
         </main>
-    );
+  );
 }

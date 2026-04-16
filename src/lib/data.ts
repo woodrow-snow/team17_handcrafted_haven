@@ -73,3 +73,20 @@ export async function fetchProductDetails(id: string) {
     throw new Error('Failed to fetch product details.');
   }
 }
+
+// Fetch a single product by ID (used for Edit Product page)
+export async function fetchProductById(id: string) {
+  try {
+    const product = await sql`
+      SELECT *
+      FROM products
+      WHERE id = ${id}
+      LIMIT 1
+    `;
+
+    return product[0] || null;  // ← return null instead of throwing
+  } catch (error) {
+    console.error("Database Error:", error);
+    return null; 
+  }
+}
