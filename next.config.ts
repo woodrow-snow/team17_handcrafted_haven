@@ -1,11 +1,25 @@
-import type { NextConfig } from "next";
-import { hostname } from "os";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactCompiler: true,
   turbopack: {
     root: process.cwd(),
+  },
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "placehold.co",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.pexels.com",
+      }
+    ],
   },
 };
 

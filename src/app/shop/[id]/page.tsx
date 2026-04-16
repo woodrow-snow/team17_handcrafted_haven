@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { fetchProductDetails } from "@/lib/data";
 import styles from "./page.module.css";
 import { Product } from "@/lib/definitions";
@@ -12,7 +13,6 @@ export default async function ProductDetailPage({
 }) {
     const { id } = await params;
     const { product, reviews } = await fetchProductDetails(id);
-
     if (!product) {
         return (
             <main className={styles.page}>
@@ -20,9 +20,12 @@ export default async function ProductDetailPage({
             </main>
         );
     }
-
     return (
         <main className={styles.page}>
+            {/* Continue Shopping Button */}
+            <Link href="/shop" className={styles.backButton}>
+                ← Continue Shopping
+            </Link>
             <div className={styles.layout}>
                 {/* Product Image */}
                 <div className={styles.imageWrap}>
